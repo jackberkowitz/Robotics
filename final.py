@@ -44,7 +44,6 @@ def main():
 	else:
 		waistPick = pickAngles[0]
 		
-  # move gripper straight up
 	if (place_locationY == 'e') or (place_locationY == 'f') or (place_locationY == 'g') or (place_locationY == 'h'):
 		waistPlace = -1*placeAngles[0]
 	else:
@@ -53,31 +52,59 @@ def main():
 	print("Real Pick Waist angle: {}".format(waistPick))
 	print("Real Place Waist angle: {}".format(waistPlace))
 	
-	'''time.sleep(5) # pause for 5 s	
+	time.sleep(5) # pause for 5 s	
 	
-	#### move robot to pick up location / pick up
-	bot.arm.set_single_joint_position("waist", waistPick) #waist
-	bot.arm.set_single_joint_position("shoulder", pickAngles[1]) #shoulder
+	#Move Robot to Home
+	bot.arm.go_to_home_pose()
+
+	#Move Robot to pick up location / pick up
 	bot.gripper.open()
-	bot.arm.set_single_joint_position("wrist_angle", pickAngles[3])
-	bot.arm.set_single_joint_position("elbow", pickAngles[2])
-	bot.gripper.close()
+	if pick_locationX == 3 or pick_locationX == 4:
+		bot.arm.set_single_joint_position("waist", waistPick)
+		bot.arm.set_single_joint_position("wrist_angle", pickAngles[3])
+		bot.arm.set_single_joint_position("elbow", pickAngles[2])
+		bot.arm.set_single_joint_position("shoulder", pickAngles[1])
+		bot.gripper.close()
+	else:
+		bot.arm.set_single_joint_position("waist", waistPick)
+		bot.arm.set_single_joint_position("shoulder", pickAngles[1])
+		bot.arm.set_single_joint_position("wrist_angle", pickAngles[3])
+		bot.arm.set_single_joint_position("elbow", pickAngles[2])
+		bot.gripper.close()
 		
-	#### move robot to drop off location / drop off
-	bot.arm.set_single_joint_position("waist", waistPlace) #waist
-	bot.arm.set_single_joint_position("shoulder", placeAngles[1]) #shoulder
-	bot.gripper.open()
-	bot.arm.set_single_joint_position("wrist_angle", placeAngles[3])
-	bot.arm.set_single_joint_position("elbow", placeAngles[2])
-	bot.gripper.close()
+	if pick_locationX == 3 or pick_locationX == 4:
+  		bot.arm.set_single_joint_position("shoulder", 0.45)
+	else:
+  		bot.arm.set_single_joint_position("shoulder", -0.15)	
+		
+	#Move Robot to Home
+	bot.arm.go_to_home_pose()
+	
+	#Move Robot to drop off location / drop off 
+	if place_locationX == 3 or place_locationX == 4:
+  		bot.arm.set_single_joint_position("waist", waistPlace)
+  		bot.arm.set_single_joint_position("wrist_angle", placeAngles[3])
+  		bot.arm.set_single_joint_position("elbow", placeAngles[2])
+  		bot.arm.set_single_joint_position("shoulder", placeAngles[1])
+  		bot.gripper.open()
+	else:
+  		bot.arm.set_single_joint_position("waist", waistPlace)
+  		bot.arm.set_single_joint_position("shoulder", placeAngles[1])
+  		bot.arm.set_single_joint_position("wrist_angle", placeAngles[3])
+  		bot.arm.set_single_joint_position("elbow", placeAngles[2])
+  		bot.gripper.open()
+  	
+	if place_locationX == 3 or place_locationX == 4:
+  		bot.arm.set_single_joint_position("shoulder", 0.45)
+	else:
+  		bot.arm.set_single_joint_position("shoulder", -0.15)	
+		
+	#Move Robot to Home
+	bot.arm.go_to_home_pose() 	
 
 	#### go to sleep
-	bot.arm.set_single_joint_position("waist", 0)
-	bot.arm.set_single_joint_position("shoulder", -1.88)
-	bot.arm.set_single_joint_position("elbow", 1.5)
-	bot.arm.set_single_joint_position("wrist_angle", 0.8)'''
-
-
+	bot.arm.go_to_sleep_pose()
+	
 def invKinematics(xFinal, yFinal,zFinal):
 	endEffector = math.radians(90) # must be vertical
 	angleOffset = math.radians(90)
@@ -112,8 +139,6 @@ def invKinematics(xFinal, yFinal,zFinal):
 	print("Elbow angle: {}".format(elbowIK))
 	#print("Wrist angle: {}".format(wrist))
 	print("-----")
-    		
-    		
 
 	#### translate coordinate systems
 	#shoulder = -(shoulderIK - angleOffset)
